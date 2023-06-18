@@ -1,11 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loginApi } from "../../../services/auth/login/loginService";
-import { STATE_STATUS } from "../../../utils/constants/stateStatus";
+import { loginApi, registerApi } from "../../services/auth/authService";
+import { STATE_STATUS } from "../../utils/constants/stateStatus";
 
 export const resolveLogin = createAsyncThunk(
     'resolve/auth/login',
     async (payload, rejectWithValue) => {
         const response = await loginApi(payload);
+
+        if (response.error !== null) {
+            return response.data;
+        }
+        return rejectWithValue(response.error);
+    }
+);
+
+export const resolveRegister = createAsyncThunk(
+    'resolve/auth/register',
+    async (payload, rejectWithValue) => {
+        const response = await registerApi(payload);
 
         if (response.error !== null) {
             return response.data;
@@ -20,15 +32,23 @@ const initialState = {
     message: '',
     username: '',
     password: '',
+    firstName: '',
+    lastName: '',
     data: {},
 }
 
-const loginSlice = createSlice({
+const authSlice = createSlice({
     name: 'login',
     initialState,
     reducers: {
         setUsername: (state, action) => {
             state.username = action.payload;
+        },
+        setFirstName: (state, action) => {
+            state.firstName = action.payload;
+        },
+        setLastName: (state, action) => {
+            state.lastName = action.payload;
         },
         setPassword: (state, action) => {
             state.password = action.payload;
@@ -53,12 +73,33 @@ const loginSlice = createSlice({
             state.status = STATE_STATUS.error;
             state.message = 'Username atau Password yang anda masukkan salah';
         });
+
+        builder.addCase(resolveRegister.pending, (state) => {
+            state.status = STATE_STATUS.loading;
+        });
+
+        builder.addCase(resolveRegister.fulfilled, (state, { payload }) => {
+            if (payload?.data) {
+                state.status = STATE_STATUS.success;
+                state.data = payload.data;
+            } else {
+                state.status = STATE_STATUS.error;
+                state.message = payload.Exception ?? payload.message;
+            }
+        });
+
+        builder.addCase(resolveRegister.rejected, (state) => {
+            state.status = STATE_STATUS.error;
+            state.message = 'Username atau Password yang anda masukkan salah';
+        });
     },
 });
 
 export const {
     setUsername,
     setPassword,
-} = loginSlice.actions;
+    setFirstName,
+    setLastName,
+} = authSlice.actions;
 
-export default loginSlice.reducer;
+export default authSlice.reducer;

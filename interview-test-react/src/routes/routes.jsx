@@ -3,6 +3,7 @@ import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import NProgress from 'nprogress';
 
 const Login = lazy(() => import('../pages/Auth/Login'));
+const Register = lazy(() => import('../pages/Auth/Register'));
 const JobList = lazy(() => import('../pages/Jobs/List'));
 const JobDetail = lazy(() => import('../pages/Jobs/Detail'));
 
@@ -24,6 +25,11 @@ const AppRoute = () => {
             <Route path="/login" element={
                 <Suspense fallback={<LazyLoad />}>
                     <Login />
+                </Suspense>
+            } />
+            <Route path="/register" element={
+                <Suspense fallback={<LazyLoad />}>
+                    <Register />
                 </Suspense>
             } />
             <Route path='/jobs' element={

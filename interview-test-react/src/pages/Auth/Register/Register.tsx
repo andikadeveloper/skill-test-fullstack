@@ -1,21 +1,26 @@
 import React from "react";
-import useLogin from "./useLogin";
 import TextInput from "../../../components/TextInput";
 import SolidButton from "../../../components/Button/SolidButton";
 import TextButton from "../../../components/Button/TextButton";
 import { useNavigate } from "react-router";
+import useRegister from "./useRegister";
 
-const Login = () => {
+const Register = () => {
     const navigate = useNavigate();
+
     const {
         status,
         message,
         username,
         password,
-        handleLogin,
+        firstName,
+        lastName,
+        handleRegister,
         handleSetUsername,
-        handleSetPassword
-    } = useLogin();
+        handleSetPassword,
+        handleSetFirstName,
+        handleSetLastName,
+    } = useRegister();
 
     return (
         <>
@@ -28,7 +33,7 @@ const Login = () => {
                             alt="Your Company"
                         />
                         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                            Sign in to your account
+                            Sign up your account
                         </h2>
                     </div>
 
@@ -46,6 +51,28 @@ const Login = () => {
                             />
 
                             <TextInput
+                                id="firstName"
+                                name="firstName"
+                                type="text"
+                                autoComplete="text"
+                                placeholder={'Your first name'}
+                                title={'First Name'}
+                                value={firstName}
+                                onInput={handleSetFirstName}
+                            />
+
+                            <TextInput
+                                id="lastName"
+                                name="lastName"
+                                type="text"
+                                autoComplete="text"
+                                placeholder={'Your last name'}
+                                title={'Last Name'}
+                                value={lastName}
+                                onInput={handleSetLastName}
+                            />
+
+                            <TextInput
                                 id="password"
                                 name="password"
                                 type="password"
@@ -56,15 +83,15 @@ const Login = () => {
                                 onInput={handleSetPassword}
                             />
 
-                            <SolidButton text={'Sign in'} onClick={handleLogin} />
+                            <SolidButton text={'Sign up'} onClick={handleRegister} />
                         </form>
 
                         <div className="mt-8 flex items-center justify-center">
                             <p className="mr-2 text-center text-sm text-gray-500">
-                                Not a member?
+                                Already a member?
                             </p>
-                            <TextButton text={'Create an account'} onClick={() => {
-                                navigate('/register');
+                            <TextButton text={'Sign in'} onClick={() => {
+                                navigate('/login');
                             }} />
                         </div>
                     </div>
@@ -74,4 +101,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default Register;

@@ -1,11 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { resolveLogin, setPassword, setUsername } from '../../../stores/auth/auth.reducer';
+import { resolveRegister, setFirstName, setLastName, setPassword, setUsername } from '../../../stores/auth/auth.reducer';
 import { useNavigate } from 'react-router-dom';
 import { STATE_STATUS } from '../../../utils/constants/stateStatus';
 import { useEffect } from 'react';
-import cookieUtils from '../../../utils/storage/cookieUtils';
 
-const useLogin = () => {
+const useRegister = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {
@@ -13,16 +12,20 @@ const useLogin = () => {
         message,
         username,
         password,
+        firstName,
+        lastName,
         data,
     } = useSelector((state) => state.auth);
 
-    const handleLogin = () => {
+    const handleRegister = () => {
         const payload = {
+            first_name: firstName,
+            last_name: lastName,
             username: username,
             password: password,
         };
 
-        dispatch(resolveLogin(payload));
+        dispatch(resolveRegister(payload));
     }
 
     const handleSetUsername = (value) => {
@@ -33,25 +36,24 @@ const useLogin = () => {
         dispatch(setPassword(value));
     };
 
+    const handleSetFirstName = (value) => {
+        dispatch(setFirstName(value));
+    };
+
+    const handleSetLastName = (value) => {
+        dispatch(setLastName(value));
+    };
+
     const handleNavigate = () => {
         setTimeout(() => {
-            navigate('/jobs');
+            navigate('/login');
             location.reload();
         }, 500);
     };
 
-    const handleSetDataToLocalStorage = () => {
-        const token = {
-            'access_token': data?.token,
-        };
-
-        cookieUtils.setAuth(JSON.stringify(token));
-    }
-
     useEffect(() => {
         if (status === STATE_STATUS.success) {
             handleNavigate();
-            handleSetDataToLocalStorage();
         }
     }, [status]);
 
@@ -60,10 +62,14 @@ const useLogin = () => {
         message,
         username,
         password,
-        handleLogin,
+        firstName,
+        lastName,
+        handleRegister,
         handleSetUsername,
-        handleSetPassword
+        handleSetPassword,
+        handleSetFirstName,
+        handleSetLastName,
     };
 }
 
-export default useLogin;
+export default useRegister;

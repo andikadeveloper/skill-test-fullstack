@@ -1,8 +1,8 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import loginReducer from "../stores/auth/login/login.reducer";
 import jobsReducer from "../stores/jobs/jobs.reducer";
+import authReducer from "../stores/auth/auth.reducer";
 
 export const rootReducer = combineReducers({
-    login: loginReducer,
+    auth: authReducer,
     jobs: jobsReducer,
 });
